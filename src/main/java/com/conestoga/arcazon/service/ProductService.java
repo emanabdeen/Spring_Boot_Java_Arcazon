@@ -6,9 +6,11 @@ import com.conestoga.arcazon.model.ProductSalesDTO;
 import com.conestoga.arcazon.repository.CategoryRepository;
 import com.conestoga.arcazon.repository.OrderItemRepository;
 import com.conestoga.arcazon.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,46 @@ public class ProductService {
         return productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
     }
 
-    // Create a new product
+    @Transactional
+    public Product addNewProduct(Product product, Long categoryId) {
+        try {
+            // Validate inputs
+            if (product == null) {
+                throw new IllegalArgumentException("Product cannot be null");
+            }
+            if (categoryId == null) {
+                throw new IllegalArgumentException("Valid category ID is required");
+            }
+            if (product.getPrice() == null) {
+                throw new IllegalArgumentException("Price is required");
+            }
+
+            // Get category object by id
+            Category category = categoryRepo.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+            product.setCategory(category);
+
+            // Set timestamps if they're null
+            if (product.getCreatedAt() == null) {
+                product.setCreatedAt(Instant.now());
+            }
+            if (product.getUpdatedAt() == null) {
+                product.setUpdatedAt(Instant.now());
+            }
+
+            // Save product
+            Product savedProduct = productRepo.save(product);
+            System.out.println("Saved product with ID: " + savedProduct.getId()); // Add this line
+            return savedProduct;
+
+        } catch (Exception e) {
+            // Log the exception details
+            e.printStackTrace();
+            throw new RuntimeException("Failed to save product: " + e.getMessage(), e);
+        }
+    }
+
+   /* @Transactional
     public Product addNewProduct(Product product, Long categoryId) {
         // Validate inputs
         if (product == null) {
@@ -51,7 +92,25 @@ public class ProductService {
 
         //Create product
         return productRepo.save(product);
-    }
+    }*/
+
+    /*// Create a new product
+    public Product addNewProduct(Product product, Long categoryId) {
+        // Validate inputs
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+        if (categoryId == null) {
+            throw new IllegalArgumentException("Valid category ID is required");
+        }
+
+        //get category object by id
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found with id: "+categoryId));
+        product.setCategory(category);
+
+        //Create product
+        return productRepo.save(product);
+    }*/
 
     // Update a product
     public Product updateProduct(Long id, Product productDetails) {
