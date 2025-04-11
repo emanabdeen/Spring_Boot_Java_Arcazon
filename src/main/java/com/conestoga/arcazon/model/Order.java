@@ -1,5 +1,7 @@
 package com.conestoga.arcazon.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonBackReference
     private Customer customer;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
@@ -43,6 +46,7 @@ public class Order {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "order")
+    @JsonManagedReference
     private Set<OrderItem> orderItems = new LinkedHashSet<>();
 
 }

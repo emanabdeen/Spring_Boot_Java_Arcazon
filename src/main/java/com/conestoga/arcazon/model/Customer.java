@@ -1,5 +1,6 @@
 package com.conestoga.arcazon.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +53,7 @@ public class Customer {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "customer")
+    @JsonManagedReference
     private Set<com.conestoga.arcazon.model.Order> orders = new LinkedHashSet<>();
 
 
