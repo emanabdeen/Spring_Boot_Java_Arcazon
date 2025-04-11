@@ -2,17 +2,27 @@ package com.conestoga.arcazon.service;
 
 import com.conestoga.arcazon.model.Category;
 import com.conestoga.arcazon.model.Product;
+import com.conestoga.arcazon.model.ProductSalesDTO;
 import com.conestoga.arcazon.repository.CategoryRepository;
+import com.conestoga.arcazon.repository.OrderItemRepository;
 import com.conestoga.arcazon.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class ProductService {
     private final ProductRepository productRepo;
     private final CategoryRepository categoryRepo;
-    public ProductService(ProductRepository productRepo, CategoryRepository categoryRepo) {
+    private  final OrderItemRepository orderItemRepo;
+
+    @Autowired
+    public ProductService(ProductRepository productRepo, CategoryRepository categoryRepo, OrderItemRepository orderItemRepo) {
         this.productRepo=productRepo;
         this.categoryRepo=categoryRepo;
+        this.orderItemRepo=orderItemRepo;
     }
 
 
@@ -26,7 +36,7 @@ public class ProductService {
     }
 
     // Create a new product
-    public Product createProduct(Product product, Long categoryId) {
+    public Product addNewProduct(Product product, Long categoryId) {
         // Validate inputs
         if (product == null) {
             throw new IllegalArgumentException("Product cannot be null");
@@ -71,6 +81,32 @@ public class ProductService {
         productRepo.delete(product);
     }
 
+    /**
+     * This method to update the stock of a product. the stock have to be equal or greater than 0. if not it will throw error
+     * @param prductId
+     * @param updatedStock
+     */
+    //update the stock of a product
+    public void updateStock(Long prductId,int updatedStock) {
+        Product product = productRepo.findById(prductId).orElseThrow(()-> new RuntimeException("Product not found"));
+
+        // Update fields
+        product.setStock(updatedStock);
+
+        // update category
+        if (updatedStock >= 0) {
+            // Update fields
+            product.setStock(updatedStock);
+
+            //update product
+            productRepo.save(product);
+        }
+        else {
+            throw new IllegalArgumentException("Stock cannot be negative");
+        }
+
+    }
+
 
     // Find products within price range
     public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
@@ -85,5 +121,17 @@ public class ProductService {
     // Find products by category
     public List<Product> findByCategoryName(String name) {
         return productRepo.findByCategory_Name(name);
+    }
+
+    public List<ProductSalesDTO> getTop5BestSellingProducts() {
+        List<Object[]> results = orderItemRepo.findTop5BestSellingProducts();
+
+        return results.stream()
+                .limit(5) // Get top 5
+                .map(result -> new ProductSalesDTO(
+                        (Product) result[0],      // Product object
+                        ((Long) result[1])       // Sum of quantity
+                ))
+                .collect(Collectors.toList());
     }
 }

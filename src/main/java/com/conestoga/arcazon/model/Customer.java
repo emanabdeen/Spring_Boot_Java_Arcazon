@@ -54,4 +54,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private Set<com.conestoga.arcazon.model.Order> orders = new LinkedHashSet<>();
 
+
+    public String getCustomerName() {
+        return firstName + " " + lastName;
+    }
+
 }

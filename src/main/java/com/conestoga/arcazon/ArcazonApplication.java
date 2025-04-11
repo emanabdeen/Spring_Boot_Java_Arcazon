@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan("com.conestoga.arcazon.model")
+/*@EntityScan("com.conestoga.arcazon.model")
 @EnableJpaRepositories("com.conestoga.arcazon.repository")
-@ComponentScan("com.conestoga.arcazon.service")
+@ComponentScan("com.conestoga.arcazon.service")*/
 public class ArcazonApplication {
 
     public static void main(String[] args) {
