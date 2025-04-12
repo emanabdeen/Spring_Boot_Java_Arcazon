@@ -1,6 +1,7 @@
 package com.conestoga.arcazon.service;
 
 import com.conestoga.arcazon.model.Category;
+import com.conestoga.arcazon.model.OrderItemRequest;
 import com.conestoga.arcazon.model.Product;
 import com.conestoga.arcazon.model.ProductSalesDTO;
 import com.conestoga.arcazon.repository.CategoryRepository;
@@ -17,14 +18,10 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepo;
-    private final CategoryRepository categoryRepo;
-    private  final OrderItemRepository orderItemRepo;
 
     @Autowired
-    public ProductService(ProductRepository productRepo, CategoryRepository categoryRepo, OrderItemRepository orderItemRepo) {
+    public ProductService(ProductRepository productRepo) {
         this.productRepo=productRepo;
-        this.categoryRepo=categoryRepo;
-        this.orderItemRepo=orderItemRepo;
     }
 
 
@@ -38,22 +35,19 @@ public class ProductService {
     }
 
     @Transactional
-    public Product addNewProduct(Product product, Long categoryId) {
+    public Product addNewProduct(Product product, Category category) {
         try {
             // Validate inputs
             if (product == null) {
                 throw new IllegalArgumentException("Product cannot be null");
-            }
-            if (categoryId == null) {
-                throw new IllegalArgumentException("Valid category ID is required");
             }
             if (product.getPrice() == null) {
                 throw new IllegalArgumentException("Price is required");
             }
 
             // Get category object by id
-            Category category = categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+            /*Category category = categoryRepo.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));*/
             product.setCategory(category);
 
             // Set timestamps if they're null
@@ -76,44 +70,9 @@ public class ProductService {
         }
     }
 
-   /* @Transactional
-    public Product addNewProduct(Product product, Long categoryId) {
-        // Validate inputs
-        if (product == null) {
-            throw new IllegalArgumentException("Product cannot be null");
-        }
-        if (categoryId == null) {
-            throw new IllegalArgumentException("Valid category ID is required");
-        }
-
-        //get category object by id
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found with id: "+categoryId));
-        product.setCategory(category);
-
-        //Create product
-        return productRepo.save(product);
-    }*/
-
-    /*// Create a new product
-    public Product addNewProduct(Product product, Long categoryId) {
-        // Validate inputs
-        if (product == null) {
-            throw new IllegalArgumentException("Product cannot be null");
-        }
-        if (categoryId == null) {
-            throw new IllegalArgumentException("Valid category ID is required");
-        }
-
-        //get category object by id
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found with id: "+categoryId));
-        product.setCategory(category);
-
-        //Create product
-        return productRepo.save(product);
-    }*/
 
     // Update a product
-    public Product updateProduct(Long id, Product productDetails) {
+    public Product updateProduct(Long id, Product productDetails, Category category) {
         Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
 
         // Update fields
@@ -124,8 +83,6 @@ public class ProductService {
 
         // update category
         if (productDetails.getCategory() != null && productDetails.getCategory().getId() != null) {
-            Category category = categoryRepo.findById(productDetails.getCategory().getId())
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + productDetails.getCategory().getId()));
             product.setCategory(category);
         }
 
@@ -142,28 +99,30 @@ public class ProductService {
 
     /**
      * This method to update the stock of a product. the stock have to be equal or greater than 0. if not it will throw error
-     * @param prductId
-     * @param updatedStock
      */
-    //update the stock of a product
-    public void updateStock(Long prductId,int updatedStock) {
-        Product product = productRepo.findById(prductId).orElseThrow(()-> new RuntimeException("Product not found"));
+    //update product request
+    public void updateProductsStock(List<OrderItemRequest> orderItems) {
 
-        // Update fields
-        product.setStock(updatedStock);
+        for (OrderItemRequest itemRequest : orderItems) {
+            // Update product stock
+            int newStock = itemRequest.getProduct().getStock() - itemRequest.getQuantity();
+            Product product = productRepo.findById(itemRequest.getProduct().getId()).orElseThrow(()-> new RuntimeException("Product not found"));
 
-        // update category
-        if (updatedStock >= 0) {
             // Update fields
-            product.setStock(updatedStock);
+            product.setStock(newStock);
 
-            //update product
-            productRepo.save(product);
-        }
-        else {
-            throw new IllegalArgumentException("Stock cannot be negative");
-        }
+            // update category
+            if (newStock >= 0) {
+                // Update fields
+                product.setStock(newStock);
 
+                //update product
+                productRepo.save(product);
+            }
+            else {
+                throw new IllegalArgumentException("Stock cannot be negative");
+            }
+        }
     }
 
 
@@ -182,15 +141,6 @@ public class ProductService {
         return productRepo.findByCategory_Name(name);
     }
 
-    public List<ProductSalesDTO> getTop5BestSellingProducts() {
-        List<Object[]> results = orderItemRepo.findTop5BestSellingProducts();
 
-        return results.stream()
-                .limit(5) // Get top 5
-                .map(result -> new ProductSalesDTO(
-                        (Product) result[0],      // Product object
-                        ((Long) result[1])       // Sum of quantity
-                ))
-                .collect(Collectors.toList());
-    }
+
 }

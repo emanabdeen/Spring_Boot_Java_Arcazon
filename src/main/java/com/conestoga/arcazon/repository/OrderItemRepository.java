@@ -13,10 +13,19 @@ import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, OrderItemId> {
 
+    /**
+     * To calculate the total price of an order already saved to the database
+     * @param orderId
+     * @return
+     */
     @Query("SELECT COALESCE(SUM(oi.unitPrice * oi.quantity), 0) " +
             "FROM OrderItem oi WHERE oi.order.id = :orderId")
     BigDecimal sumOrderItemsTotalByOrderId(@Param("orderId") Long orderId);
 
+
+    /**
+     * To findTop5BestSellingProducts
+     */
     @Query("SELECT oi.product, SUM(oi.quantity) as totalSold " +
             "FROM OrderItem oi " +
             "GROUP BY oi.product " +
