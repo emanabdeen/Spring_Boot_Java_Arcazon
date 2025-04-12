@@ -19,31 +19,31 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/products-list")
     public String getAllProducts(Model model, HttpSession session) {
-        // Check if user is logged in
+        /*// Check if user is logged in
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             return "redirect:/customers/login";
-        }
+        }*/
 
         List<Product> products = productService.findAll();
         model.addAttribute("products", products);
-        model.addAttribute("customer", customer);
+        //model.addAttribute("customer", customer);
         return "products/products-list";
     }
 
     @GetMapping("/{id}")
     public String getProductById(@PathVariable Long id, Model model, HttpSession session) {
-        // Check if user is logged in
+        /*// Check if user is logged in
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             return "redirect:/customers/login";
-        }
+        }*/
 
         Product product = productService.findById(id);
         model.addAttribute("product", product);
-        model.addAttribute("customer", customer); // Add customer to model
+        //model.addAttribute("customer", customer); // Add customer to model
         return "products/product-details"; // Updated template path
     }
 }

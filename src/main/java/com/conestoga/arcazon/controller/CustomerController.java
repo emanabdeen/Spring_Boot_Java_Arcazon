@@ -2,7 +2,6 @@ package com.conestoga.arcazon.controller;
 
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.service.CustomerService;
-import com.conestoga.arcazon.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +35,7 @@ public class CustomerController {
             return "redirect:/products"; // This should match your ProductController mapping
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "customers/login";
+            return "dashboard";
         }
     }
 
