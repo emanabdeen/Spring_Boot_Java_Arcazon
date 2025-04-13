@@ -1,4 +1,4 @@
-package com.conestoga.arcazon.Utils;
+package com.conestoga.arcazon.utils;
 
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.CustomerDto;

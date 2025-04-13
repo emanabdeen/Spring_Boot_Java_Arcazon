@@ -8,82 +8,102 @@
 </head>
 <body>
 
-
-<form th:action="@{~/customers}" method="POST">
-
-
-    <div class="container mt-4">
-
-        <div>
-            <input class="form-control"
-                   type="text" id="id" name="id"  hidden/>
-
-        </div>
-
-        <div>
-            <span style="font-weight: bold">First Name</span>
-            <input class="form-control"
-                   type="text" id="firstName" name="firstName"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Last Name</span>
-            <input class="form-control"
-                   type="text" id="lastName" name="lastName"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Email</span>
-
-            <input class="form-control"
-                   type="text" id="email" name="email"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Phone</span>
-            <input class="form-control"
-                   type="text"  id="phone" name="phone" />
-        </div>
-
-
-        <div>
-            <span style="font-weight: bold">Address</span>
-
-            <input class="form-control"
-                   type="text" id="addressLine1" name="addressLine1" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">City</span>
-
-            <input class="form-control"
-                   type="text"  id="city" name="city" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Province</span>
-
-            <input class="form-control"
-                   type="text" id="province" name="province" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Portal Code</span>
-            <input class="form-control"
-                   type="text"  id="postalCode" name="postalCode"/>
-        </div>
-
-        <div>
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-
-    </div>
-</form>
-<br>
-
 <div class="container mt-4">
-    <a class="btn btn-secondary" th:href="@{/customers}">Back to List</a>
-</div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="mb-0">Add New Customer</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Error Messages -->
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                        <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
 
+                    <form th:action="@{~/customers}" method="POST">
+
+                        <div class="container mt-4">
+
+                            <div class="mb-3">
+                                <input class="form-control"
+                                       type="text" id="id" name="id" hidden/>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label style="font-weight: bold">First Name</label>
+                                <input class="form-control"
+                                       type="text" id="firstName" name="firstName" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label style="font-weight: bold">Last Name</label>
+                                <input class="form-control"
+                                       type="text" id="lastName" name="lastName" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label style="font-weight: bold">Email</label>
+
+                                <input class="form-control"
+                                       type="text" id="email" name="email" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label style="font-weight: bold">Phone</label>
+                                <input class="form-control"
+                                       type="text" id="phone" name="phone"/>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label style="font-weight: bold">Address</label>
+
+                                <input class="form-control"
+                                       type="text" id="addressLine1" name="addressLine1"/>
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col">
+                                    <label style="font-weight: bold">City</label>
+
+                                    <input class="form-control"
+                                           type="text" id="city" name="city"/>
+                                </div>
+
+
+                                <div class="col">
+                                    <label style="font-weight: bold">Province</label>
+
+                                    <input class="form-control"
+                                           type="text" id="province" name="province"/>
+                                </div>
+
+                                <div class="col">
+                                    <label style="font-weight: bold">Postal Code</label>
+                                    <input class="form-control"
+                                           type="text" id="postalCode" name="postalCode"/>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" type="submit">Save</button>
+                            </div>
+
+                        </div>
+                    </form>
+                    <br>
+
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-secondary" th:href="@{/customers}">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
