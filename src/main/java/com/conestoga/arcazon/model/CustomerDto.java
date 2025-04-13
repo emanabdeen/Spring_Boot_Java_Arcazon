@@ -1,66 +1,31 @@
 package com.conestoga.arcazon.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Column;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+
+public class CustomerDto {
 
 
-@Entity
-@Table(name = "customers")
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
-
-    @Column(name = "first_name", nullable = false, length = 60)
     private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 60)
     private String lastName;
-
-
-    @Column(name = "email", nullable = false, length = 120)
     private String email;
 
-    @Column(name = "phone", length = 25)
     private String phone;
-
-    @Column(name = "address_line1", length = 120)
     private String addressLine1;
 
-    @Column(name = "city", length = 80)
     private String city;
-
-    @Column(name = "province", length = 40)
     private String province;
-
-    @Column(name = "postal_code", length = 15)
     private String postalCode;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
     private Instant createdAt;
 
 
-    @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "customer")
-    @JsonManagedReference
-    private Set<Order> orders = new LinkedHashSet<>();
-
-
-    public String getCustomerName() {
-        return firstName + " " + lastName;
+    public CustomerDto() {
     }
 
     public Long getId() {
@@ -149,23 +114,5 @@ public class Customer {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-    }
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = Instant.now();
     }
 }
