@@ -92,7 +92,7 @@
 
 <div class="container mt-4">
     <a class="btn btn-secondary" th:href="@{/customers}">Back to List</a>
-    <a class="btn btn-secondary" href="@${/customers/{id} (id=$(customer.id)}">Bak to View</a>
+    <a class="btn btn-secondary" th:href="@{/customers/{id}(id=${customer.id})}">Bak to View</a>
 </div>
 
 </body>

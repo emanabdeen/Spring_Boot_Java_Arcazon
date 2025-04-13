@@ -135,7 +135,7 @@ public class CustomerController {
 
     }
 
-    @GetMapping("/add")
+    @GetMapping("/customer-add")
     public String addCustomer(){
         return "customers/customer-add.html";
     }
