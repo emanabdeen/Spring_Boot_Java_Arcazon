@@ -49,14 +49,15 @@ public class CustomerService {
     }
 
     @Transactional
-    public void addCustomer(CustomerDto customerDto) throws Exception {
+    public CustomerDto addCustomer(CustomerDto customerDto) throws Exception {
 
         try {
 
             boolean emailExists = emailExists(customerDto);
             if (!emailExists) {
                 Customer customer = CustomerUtils.dtoToEntity(customerDto);
-                customerRepo.save(customer);
+               Customer newCustomer =  customerRepo.save(customer);
+               return CustomerUtils.entityToDto(newCustomer);
             } else {
                 throw new InvalidObjectException("Email already exists");
             }
@@ -78,6 +79,11 @@ public class CustomerService {
             if (emailExists) {
                 throw new InvalidObjectException("Email already exists");
             } else {
+
+                Customer originalCustomer = findCustomerById(customerDto.getId());
+
+                customerDto.setCreatedAt(originalCustomer.getCreatedAt());
+
                 Customer customer = CustomerUtils.dtoToEntity(customerDto);
                 customerRepo.save(customer);
             }
