@@ -2,8 +2,10 @@ package com.conestoga.arcazon.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,6 +15,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -39,4 +42,8 @@ public class Category {
     @JsonManagedReference
     private Set<Product> products = new LinkedHashSet<>();
 
+    @Override
+    public String toString() {
+        return  "Category: [id=" + id + ", name=" + name + ", description=" + description + "]";
+    }
 }
