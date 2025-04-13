@@ -3,6 +3,7 @@ package com.conestoga.arcazon.controller;
 import com.conestoga.arcazon.Utils.CustomerUtils;
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.CustomerDto;
+import com.conestoga.arcazon.model.ProductQuantityDTO;
 import com.conestoga.arcazon.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +33,42 @@ public class CustomerController {
         return "customers/login";
     }
 
+    /*@PostMapping("/login")
+    public String processLogin(String email,
+                               HttpSession session,
+                               Model model,
+                               @ModelAttribute("redirectTo") String redirectTo) {
+        try {
+            Customer customer = customerService.findByEmail(email);
+            session.setAttribute("customer", customer);
+
+            // Check if there's a pending order
+            List<ProductQuantityDTO> pendingOrder =
+                    (List<ProductQuantityDTO>) session.getAttribute("pendingOrderItems");
+
+            if (pendingOrder != null && !pendingOrder.isEmpty()) {
+                session.removeAttribute("pendingOrderItems"); // Clear the stored order
+                return "redirect:/orders/order-items"; // Redirect back to order review
+            }
+
+            return "redirect:/"; // Default redirect to the root "dashboard"
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "dashboard";
+        }
+    }*/
+
+
     @PostMapping("/login")
     public String processLogin(String email, HttpSession session, Model model) {
         try {
             Customer customer = customerService.findByEmail(email);
 
             session.setAttribute("customer", customer);
-            return "redirect:/products"; // This should match your ProductController mapping
+            return "redirect:/"; // Default redirect to the root "dashboard"
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "dashboard";
+            return "/";
         }
     }
 

@@ -22,7 +22,13 @@ public class ProductService {
 
     //return all products from database
     public List<Product> findAll() {
+
         return productRepo.findAll();
+    }
+
+    //return products have stock >0
+    public List<Product> findAllHaveStock() {
+        return productRepo.findAllByStockIsGreaterThan(0);
     }
 
     public Product findById(long id) {
@@ -112,6 +118,19 @@ public class ProductService {
         }
     }
 
+    public  Boolean checkProductStock(List<OrderItemRequest> orderItems) {
+        for (OrderItemRequest itemRequest : orderItems) {
+            // Update product stock
+            int newStock = itemRequest.getProduct().getStock() - itemRequest.getQuantity();
+
+            // update category
+            if (newStock < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public List<Product> findByFilters(Double minPrice, Double maxPrice, Long categoryId) {
         if (categoryId != null) {
             if (minPrice != null && maxPrice != null) {
@@ -150,7 +169,5 @@ public class ProductService {
 
         return productRepo.findByCategory_Name(name);
     }
-
-
 
 }

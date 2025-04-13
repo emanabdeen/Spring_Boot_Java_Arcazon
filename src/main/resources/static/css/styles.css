@@ -111,7 +111,20 @@ body.dashboard {
     font-size: 1.1rem;
 }
 
-
+.confirmation-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    margin-top: 3rem;
+}
+.confirmation-icon {
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: 1.5rem;
+}
 
 
 /* Responsive adjustments */

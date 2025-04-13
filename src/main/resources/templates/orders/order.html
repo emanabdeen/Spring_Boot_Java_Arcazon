@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <link th:href="@{'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container">
+    <div class="confirmation-container bg-white">
+        <h2 class="mb-3">Thank you for your order!</h2>
+        <p class="lead mb-4">Your order has been successfully placed.</p>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="card-text">Order ID: <strong th:text="${id}"></strong></p>
+            </div>
+        </div>
+
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a th:href="@{/orders/products-list}" class="btn btn-primary me-md-2">
+                <i class="bi bi-cart me-2"></i>Continue Shopping
+            </a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">
+                <i class="bi bi-house-door me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

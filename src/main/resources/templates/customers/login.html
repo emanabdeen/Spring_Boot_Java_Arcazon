@@ -35,6 +35,8 @@
 
                     <!-- Login Form -->
                     <form th:action="@{/customers/login}" method="post">
+                        <!-- Add this hidden input -->
+                        <input type="hidden" th:name="redirectTo" th:value="${redirectTo}">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="email"

@@ -50,6 +50,19 @@ public class OrderService {
     }
 
 
+    public  BigDecimal getTotalPrice(List<OrderItemRequest> orderItems) {
+        if (orderItems == null || orderItems.isEmpty()) {
+            throw new IllegalArgumentException("Order items cannot be empty");
+        }
+        double totalPrice=0.0;
+
+        for (OrderItemRequest item : orderItems) {
+            totalPrice=totalPrice+(item.getProduct().getPrice()* item.getQuantity());
+        }
+        return new BigDecimal(totalPrice);
+    }
+
+
     public List<Order> findAllOrdersByCustomerId(long id) {
 
         return orderRepo.findAllByCustomer_Id(id);
