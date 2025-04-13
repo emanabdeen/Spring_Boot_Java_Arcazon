@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class CustomerController {
     @PostMapping("/login")
     public String processLogin(String email, HttpSession session, Model model) {
         try {
-            Customer customer = customerService.findByEmail(email);
+            Customer customer = customerService.findByEmail(email,null);
 
             session.setAttribute("customer", customer);
             return "redirect:/products/products-list"; // This should match your ProductController mapping
@@ -51,7 +53,7 @@ public class CustomerController {
     public String processSignup(@ModelAttribute("customer") CustomerDto customerDto, Model model) {
         try {
             // Check if email already exists
-            if (customerService.emailExists(customerDto.getEmail())) {
+            if (customerService.emailExists(customerDto)) {
                 model.addAttribute("error", "Email already exists. Please use a different email.");
                 return "customers/signup";
             }
@@ -71,13 +73,16 @@ public class CustomerController {
 
         List<CustomerDto> customerDtoList = new ArrayList<>();
         //if there's at least one filter
-        if((name != null && !name.isEmpty()) || (email != null &&  !email.isEmpty())){
-            customerDtoList = customerService.findAllByNameOrEmail(name,name,email);
+        if((name != null && !name.trim().isEmpty()) || (email != null &&  !email.trim().isEmpty())){
+
+            customerDtoList = customerService.findAllByNameOrEmail(name,email);
         }else {
 
             customerDtoList = this.customerService.findAll();
         }
         model.addAttribute("customers", customerDtoList);
+        model.addAttribute("name", name);
+        model.addAttribute("email", email);
         return "customers/customers.html";
     }
 
@@ -96,9 +101,20 @@ public class CustomerController {
 
 
     @PostMapping
-    public String addCustomer(@ModelAttribute CustomerDto dto){
-        customerService.addCustomer(dto);
-        return "redirect:/customers";
+    public String addCustomer(@ModelAttribute CustomerDto dto, RedirectAttributes redirectAttributes){
+
+       try {
+           customerService.addCustomer(dto);
+           redirectAttributes.addFlashAttribute("success", "Customer added successfully!");
+           return "redirect:/customers";
+       }catch (InvalidObjectException e){
+           redirectAttributes.addFlashAttribute("error", e.getMessage() );
+           return "redirect:/customers/add";
+       }catch (Exception e){
+           redirectAttributes.addFlashAttribute("error", "Failed to add customer " );
+           return "redirect:/customers/add";
+       }
+
     }
 
     @GetMapping("/{id}/edit")
@@ -114,14 +130,23 @@ public class CustomerController {
     }
 
     @PostMapping("/{id}")
-    public String postCustomerToEditById(@PathVariable Long id, @ModelAttribute CustomerDto dto) {
-        if (id != null) {
+    public String postCustomerToEditById(@PathVariable Long id, @ModelAttribute CustomerDto dto, RedirectAttributes redirectAttributes) {
 
-            customerService.updateCustomer(dto);
+        try {
+            if (id != null) {
+                customerService.updateCustomer(dto);
+                redirectAttributes.addFlashAttribute("success", "Customer updated successfully!");
+                return "redirect:/customers";
+            }else{
+                throw new Exception("Failed to update customer");
+            }
+       }catch (InvalidObjectException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/customers/" + id + "/edit";
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("error", "Failed to update customer" );
+            return "redirect:/customers/"+id+"/edit";
         }
-
-        return  "redirect:/customers";
-
     }
 
     @GetMapping("/{id}/delete")
@@ -136,4 +161,8 @@ public class CustomerController {
         return "customers/customer-add.html";
     }
 
+    @GetMapping("/dashboard")
+    public String redirectToDashboard(){
+        return "dashboard.html";
+    }
 }

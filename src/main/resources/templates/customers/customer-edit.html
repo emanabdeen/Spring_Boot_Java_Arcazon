@@ -8,92 +8,111 @@
 </head>
 <body>
 
-
-<form th:action="@{~/customers/{id} (id=${customer.id})}" method="POST">
-
-
-    <div class="container mt-4">
-
-        <div>
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.id}" id="id" name="id"  hidden/>
-
-        </div>
-
-        <div>
-            <span style="font-weight: bold">First Name</span>
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.firstName}" id="firstName" name="firstName"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Last Name</span>
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.lastName}" id="lastName" name="lastName"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Email</span>
-
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.email}" id="email" name="email"  required/>
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Phone</span>
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.phone}" id="phone" name="phone" />
-        </div>
-
-
-        <div>
-            <span style="font-weight: bold">Address</span>
-
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.addressLine1}" id="addressLine1" name="addressLine1" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">City</span>
-
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.city}" id="city" name="city" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Province</span>
-
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.province}" id="province" name="province" />
-        </div>
-
-        <div>
-            <span style="font-weight: bold">Portal Code</span>
-            <input class="form-control"
-                   type="text"
-                   th:value="${customer.postalCode}" id="postalCode" name="postalCode" />
-        </div>
-
-        <div>
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-
-    </div>
-</form>
-<br>
-
 <div class="container mt-4">
-    <a class="btn btn-secondary" th:href="@{/customers}">Back to List</a>
-    <a class="btn btn-secondary" href="@${/customers/{id} (id=$(customer.id)}">Bak to View</a>
-</div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="mb-0">Update Customer</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Error Messages -->
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                        <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
 
+
+                    <form th:action="@{~/customers/{id} (id=${customer.id})}" method="POST">
+
+
+                        <div class="container mt-4">
+
+                            <div class="mb-3">
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.id}" id="id" name="id" hidden/>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <span style="font-weight: bold">First Name</span>
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.firstName}" id="firstName" name="firstName" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <span style="font-weight: bold">Last Name</span>
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.lastName}" id="lastName" name="lastName" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <span style="font-weight: bold">Email</span>
+
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.email}" id="email" name="email" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <span style="font-weight: bold">Phone</span>
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.phone}" id="phone" name="phone"/>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <span style="font-weight: bold">Address</span>
+
+                                <input class="form-control"
+                                       type="text"
+                                       th:value="${customer.addressLine1}" id="addressLine1" name="addressLine1"/>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <span style="font-weight: bold">City</span>
+
+                                    <input class="form-control"
+                                           type="text"
+                                           th:value="${customer.city}" id="city" name="city"/>
+                                </div>
+
+                                <div class="col">
+                                    <span style="font-weight: bold">Province</span>
+
+                                    <input class="form-control"
+                                           type="text"
+                                           th:value="${customer.province}" id="province" name="province"/>
+                                </div>
+
+                                <div class="col">
+                                    <span style="font-weight: bold">Portal Code</span>
+                                    <input class="form-control"
+                                           type="text"
+                                           th:value="${customer.postalCode}" id="postalCode" name="postalCode"/>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" type="submit">Update Customer</button>
+                            </div>
+
+                            <br>
+
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-secondary" th:href="@{/customers}">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,54 +1,111 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Customers</title>
-    <link  th:href="@{/css/style.css}" rel="stylesheet" />
-    <link  th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
 
-<a class="btn btn-primary" th:href="@{/customer-add}">Add</a>
+<div class="container mt-4" style="max-width: none">
+    <h1>Customer Management</h1>
+    <!-- Success/Error Messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 
-<div class="container mt-4">
-    <h1> Products</h1>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Customer #</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Province</th>
-            <th>Postal Code</th>
-            <th>Created At</th>
-            <th>Updated At</th>
-        </tr>
-        </thead>
-        <tbody th:each="customer : ${customers}">
-        <tr>
-            <td th:text="${customer.id}"></td>
-            <td th:text="${customer.firstName}"></td>
-            <td th:text="${customer.lastName}"></td>
-            <td th:text="${customer.email}"></td>
-            <td th:text="${customer.phone}"></td>
-            <td th:text="${customer.addressLine1}"></td>
-            <td th:text="${customer.city}"></td>
-            <td th:text="${customer.province}"></td>
-            <td th:text="${customer.postalCode}"></td>
-            <td th:text="${customer.createdAt}"></td>
-            <td th:text="${customer.updatedAt}"></td>
-            <td>
-                <a th:href="@{/customers/{id}(id=${customer.id})}">View</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form th:action="@{/customers}" method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       th:value="${param.name}" minlength="1">
+            </div>
+            <div class="col-md-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email" name="email"
+                       th:value="${param.email}" minlength="1">
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">Filter</button>
+                <a th:href="@{/customers}" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+
+
+        <div class="d-flex justify-content-between mt-4" >
+
+                <a th:href="@{/customers/add}" class="btn btn-success">
+                    Add New Customer
+                </a>
+
+                <a class="btn btn-secondary text-end" th:href="@{/customers/dashboard}">Back to Dashboard</a>
+
+        </div>
+
+    </div>
+    <!--End filters section-->
+
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Province</th>
+                <th>Postal Code</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th colspan="3">Actions</th>
+            </tr>
+            </thead>
+            <tbody th:each="customer : ${customers}">
+            <tr>
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.firstName}"></td>
+                <td th:text="${customer.lastName}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.phone}"></td>
+                <td th:text="${customer.addressLine1}"></td>
+                <td th:text="${customer.city}"></td>
+                <td th:text="${customer.province}"></td>
+                <td th:text="${customer.postalCode}"></td>
+                <td th:text="${T(com.conestoga.arcazon.utils.DateTimeUtils).formatDateTime(customer.createdAt)}"></td>
+                <td th:text="${T(com.conestoga.arcazon.utils.DateTimeUtils).formatDateTime(customer.updatedAt)}"></td>
+                <td>
+                    <a th:href="@{/customers/{id}(id=${customer.id})}" class="text-primary">
+                        View
+                    </a>
+                <td>
+
+                    <a th:href="@{/customers/{id}/edit (id=${customer.id})}" class="text-success">
+                        Edit
+                    </a>
+                </td>
+                <td>
+
+                    <a th:href="@{/customers/{id}/delete (id=${customer.id})}" class="text-danger"
+                       onclick="return confirm('Are you sure you want to delete this customer?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
 </body>
 </html>
 

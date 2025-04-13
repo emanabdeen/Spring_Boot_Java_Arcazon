@@ -46,7 +46,6 @@ public class Customer {
     @Column(name = "postal_code", length = 15)
     private String postalCode;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
