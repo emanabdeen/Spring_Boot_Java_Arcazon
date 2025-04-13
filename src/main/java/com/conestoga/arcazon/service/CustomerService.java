@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -16,8 +17,27 @@ public class CustomerService {
         this.customerRepo = customerRepo;
     }
 
+    public Customer saveCustomer(Customer customer) {
+        // TO DO add validations
+        return customerRepo.save(customer);
+    }
+
     public Customer findCustomerById(long id) {
         return customerRepo.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
+
+    public Customer findByEmail(String email) {
+        return customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
+
+    public boolean emailExists(String email) {
+        try {
+            findByEmail(email);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public List<Customer> findAll() {

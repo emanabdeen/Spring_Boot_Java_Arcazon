@@ -2,6 +2,7 @@ package com.conestoga.arcazon.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,4 +42,8 @@ public class Category {
     @JsonManagedReference
     private Set<com.conestoga.arcazon.model.Product> products = new LinkedHashSet<>();
 
+    @Override
+    public String toString() {
+        return  "Category: [id=" + id + ", name=" + name + ", description=" + description + "]";
+    }
 }

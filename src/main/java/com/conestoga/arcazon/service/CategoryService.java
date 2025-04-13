@@ -2,6 +2,7 @@ package com.conestoga.arcazon.service;
 
 import com.conestoga.arcazon.model.Category;
 import com.conestoga.arcazon.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class CategoryService {
         return categoryRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
     }
 
+    @Transactional
     public Category addNewCategory(Category category) {
         return categoryRepo.save(category);
     }
