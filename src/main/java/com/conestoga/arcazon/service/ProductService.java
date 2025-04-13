@@ -68,7 +68,7 @@ public class ProductService {
     }
 
     // Update a product
-    public Product updateProduct(Long id, Product productDetails, Category category) {
+    public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
 
         // Update fields
@@ -76,11 +76,8 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
+        product.setCategory(productDetails.getCategory());
 
-        // update category
-        if (productDetails.getCategory() != null && productDetails.getCategory().getId() != null) {
-            product.setCategory(category);
-        }
 
         //update product
         return productRepo.save(product);

@@ -1,5 +1,6 @@
 package com.conestoga.arcazon.controller;
 
+import com.conestoga.arcazon.model.Category;
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.Product;
 import com.conestoga.arcazon.model.ProductSalesDTO;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,39 +29,22 @@ public class ProductController {
         this.orderItemService = orderItemService;
     }
 
-    //@GetMapping("/products-list")
-    //public String getAllProducts(Model model, HttpSession session) {
-        //*// Check if user is logged in
-        //Customer customer = (Customer) session.getAttribute("customer");
-        //if (customer == null) {
-           // return "redirect:/customers/login";
-       // }*/
+    @GetMapping("/products-list")
+    public String getAllProducts( Double minPrice, Double maxPrice, Long categoryId,Model model) {
 
-
-
-        //List<Product> products = productService.findAll();
-        //model.addAttribute("products", products);
-        ////model.addAttribute("customer", customer);
-        //return "products/products-list";
-   // }
-
-
-        @GetMapping("/products-list")
-        public String getAllProducts(Double minPrice,Double maxPrice,Long categoryId,Model model) {
-
-            List<Product> products;
-            if (minPrice != null || maxPrice != null || categoryId != null) {
-                // Filter products
-                products = productService.findByFilters(minPrice, maxPrice, categoryId);
-            } else {
-                // Get all products
-                products = productService.findAll();
-            }
-
-            model.addAttribute("products", products);
-            model.addAttribute("categories", categoryService.findAll()); // For category dropdown
-            return "products/products-list";
+        List<Product> products;
+        if (minPrice != null || maxPrice != null || categoryId != null) {
+            // Filter products
+            products = productService.findByFilters(minPrice, maxPrice, categoryId);
+        } else {
+            // Get all products
+            products = productService.findAll();
         }
+
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.findAll()); // For category dropdown
+        return "products/products-list";
+    }
 
     @GetMapping("/top-sellers")
     public String getTopSellers(Model model) {
@@ -96,11 +81,41 @@ public class ProductController {
         return "products/add-product-form";
     }
 
+    @PostMapping("/add-new")
+    public String addProduct(@ModelAttribute Product product,@RequestParam Long categoryId,RedirectAttributes redirectAttributes) {
+        try {
+            Category category = categoryService.findById(categoryId);
+            Product savedProduct = productService.addNewProduct(product, category);
+            redirectAttributes.addFlashAttribute("success", "Product added successfully!");
+            return "redirect:/products/products-list";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to add product " );
+            return "redirect:/products/add-new";
+        }
+    }
+
     @GetMapping("/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
         model.addAttribute("product", productService.findById(id));
         model.addAttribute("categories", categoryService.findAll());
         return "products/edit-product-form";
+    }
+
+
+    @PostMapping("/update/{id}")
+    public String updateProduct(@PathVariable Long id,@ModelAttribute Product product,@RequestParam Long categoryId,RedirectAttributes redirectAttributes) {
+        try {
+            Category category = categoryService.findById(categoryId);
+            product.setCategory(category);
+            productService.updateProduct(id, product);
+            redirectAttributes.addFlashAttribute("success","Product updated successfully!");
+            return "redirect:/products/products-list";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Error updating product: " + e.getMessage());
+            return "redirect:/products/edit/" + id;
+        }
     }
 
     @GetMapping("/delete/{id}")
