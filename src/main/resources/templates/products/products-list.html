@@ -9,7 +9,13 @@
 </head>
 <body>
 <div class="container mt-4">
+  <div>
+    <a th:href="@{/}" class="home-button">
+      <i class="bi bi-house-door me-2"></i>HOME
+    </a>
+  </div>
   <h1>Product Management</h1>
+
   <!-- Success/Error Messages -->
   <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
     <span th:text="${success}"></span>
