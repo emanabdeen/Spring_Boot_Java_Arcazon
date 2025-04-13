@@ -1,19 +1,15 @@
 package com.conestoga.arcazon.controller;
 
-import com.conestoga.arcazon.Utils.CustomerUtils;
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.CustomerDto;
 import com.conestoga.arcazon.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/customers")
@@ -38,7 +34,7 @@ public class CustomerController {
             Customer customer = customerService.findByEmail(email);
 
             session.setAttribute("customer", customer);
-            return "redirect:/products"; // This should match your ProductController mapping
+            return "redirect:/products/products-list"; // This should match your ProductController mapping
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "dashboard";
