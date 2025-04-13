@@ -35,7 +35,7 @@ public class CustomerController {
             return "redirect:/products"; // This should match your ProductController mapping
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "dashboard"; //--------------------------<<< can be changed to order page
+            return "dashboard";
         }
     }
 

@@ -54,7 +54,7 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     @JsonManagedReference
-    private Set<com.conestoga.arcazon.model.Order> orders = new LinkedHashSet<>();
+    private Set<Order> orders = new LinkedHashSet<>();
 
 
     public String getCustomerName() {

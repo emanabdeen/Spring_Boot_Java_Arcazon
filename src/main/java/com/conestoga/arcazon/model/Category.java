@@ -37,6 +37,6 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     @JsonManagedReference
-    private Set<com.conestoga.arcazon.model.Product> products = new LinkedHashSet<>();
+    private Set<Product> products = new LinkedHashSet<>();
 
 }

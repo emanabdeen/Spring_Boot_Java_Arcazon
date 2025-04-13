@@ -1,6 +1,5 @@
 package com.conestoga.arcazon.service;
 
-import com.conestoga.arcazon.model.Category;
 import com.conestoga.arcazon.model.OrderItemRequest;
 import com.conestoga.arcazon.model.Product;
 import com.conestoga.arcazon.repository.ProductRepository;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -32,7 +30,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product addNewProduct(Product product, Category category) {
+    public Product addNewProduct(Product product) {
         try {
             // Validate inputs
             if (product == null) {
@@ -41,11 +39,6 @@ public class ProductService {
             if (product.getPrice() == null) {
                 throw new IllegalArgumentException("Price is required");
             }
-
-            // Get category object by id
-            /*Category category = categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));*/
-            product.setCategory(category);
 
             // Set timestamps if they're null
             if (product.getCreatedAt() == null) {
@@ -67,9 +60,8 @@ public class ProductService {
         }
     }
 
-
     // Update a product
-    public Product updateProduct(Long id, Product productDetails, Category category) {
+    public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
 
         // Update fields
@@ -77,16 +69,14 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
+        product.setCategory(productDetails.getCategory());
 
-        // update category
-        if (productDetails.getCategory() != null && productDetails.getCategory().getId() != null) {
-            product.setCategory(category);
-        }
+        product.setUpdatedAt(Instant.now());// update time
+
 
         //update product
         return productRepo.save(product);
     }
-
 
     // Delete a product
     public void deleteProduct(long id) {
@@ -122,6 +112,27 @@ public class ProductService {
         }
     }
 
+    public List<Product> findByFilters(Double minPrice, Double maxPrice, Long categoryId) {
+        if (categoryId != null) {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceBetween(categoryId, minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByCategoryIdAndPriceGreaterThanEqual(categoryId, minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceLessThanEqual(categoryId, maxPrice);
+            }
+            return productRepo.findByCategory_Id(categoryId);
+        } else {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByPriceBetween(minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByPriceGreaterThanEqual(minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByPriceLessThanEqual(maxPrice);
+            }
+            return productRepo.findAll();
+        }
+    }
 
     // Find products within price range
     public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
@@ -130,11 +141,13 @@ public class ProductService {
 
     // Find products by category
     public List<Product> findByCategoryId(Long categoryId) {
+
         return productRepo.findByCategory_Id(categoryId);
     }
 
     // Find products by category
     public List<Product> findByCategoryName(String name) {
+
         return productRepo.findByCategory_Name(name);
     }
 
