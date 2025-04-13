@@ -1,6 +1,5 @@
 package com.conestoga.arcazon.service;
 
-import com.conestoga.arcazon.model.Category;
 import com.conestoga.arcazon.model.OrderItemRequest;
 import com.conestoga.arcazon.model.Product;
 import com.conestoga.arcazon.repository.ProductRepository;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -32,7 +30,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product addNewProduct(Product product, Category category) {
+    public Product addNewProduct(Product product) {
         try {
             // Validate inputs
             if (product == null) {
@@ -41,11 +39,6 @@ public class ProductService {
             if (product.getPrice() == null) {
                 throw new IllegalArgumentException("Price is required");
             }
-
-            // Get category object by id
-            /*Category category = categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));*/
-            product.setCategory(category);
 
             // Set timestamps if they're null
             if (product.getCreatedAt() == null) {
@@ -77,6 +70,8 @@ public class ProductService {
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
         product.setCategory(productDetails.getCategory());
+
+        product.setUpdatedAt(Instant.now());// update time
 
 
         //update product

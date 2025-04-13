@@ -84,8 +84,9 @@ public class ProductController {
     @PostMapping("/add-new")
     public String addProduct(@ModelAttribute Product product,@RequestParam Long categoryId,RedirectAttributes redirectAttributes) {
         try {
-            Category category = categoryService.findById(categoryId);
-            Product savedProduct = productService.addNewProduct(product, category);
+
+            product.setCategory(categoryService.findById(categoryId));
+            productService.addNewProduct(product);
             redirectAttributes.addFlashAttribute("success", "Product added successfully!");
             return "redirect:/products/products-list";
 
