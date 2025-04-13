@@ -122,6 +122,27 @@ public class ProductService {
         }
     }
 
+    public List<Product> findByFilters(Double minPrice, Double maxPrice, Long categoryId) {
+        if (categoryId != null) {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceBetween(categoryId, minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByCategoryIdAndPriceGreaterThanEqual(categoryId, minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceLessThanEqual(categoryId, maxPrice);
+            }
+            return productRepo.findByCategory_Id(categoryId);
+        } else {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByPriceBetween(minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByPriceGreaterThanEqual(minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByPriceLessThanEqual(maxPrice);
+            }
+            return productRepo.findAll();
+        }
+    }
 
     // Find products within price range
     public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
