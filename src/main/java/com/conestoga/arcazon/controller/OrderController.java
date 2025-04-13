@@ -8,6 +8,7 @@ import com.conestoga.arcazon.service.CustomerService;
 import com.conestoga.arcazon.service.OrderItemService;
 import com.conestoga.arcazon.service.OrderService;
 import com.conestoga.arcazon.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,18 @@ public class OrderController {
         this.orderItemService=orderItemService;
         this.customerService=customerService;
         this.productService = productService;
+    }
+
+    @GetMapping
+    public String getOrder(Model model, HttpSession session, List <OrderItemRequest> orderItemRequestList) {
+        // Check if user is logged in
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            return "redirect:/customers/login";
+        }
+        model.addAttribute("orderItemRequestList", orderItemRequestList);
+        model.addAttribute("customer", customer);
+        return "orders/order-items";
     }
 
     @PostMapping

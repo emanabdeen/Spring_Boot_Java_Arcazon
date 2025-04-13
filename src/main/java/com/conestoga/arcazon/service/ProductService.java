@@ -67,9 +67,8 @@ public class ProductService {
         }
     }
 
-
     // Update a product
-    public Product updateProduct(Long id, Product productDetails, Category category) {
+    public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
 
         // Update fields
@@ -77,16 +76,12 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
+        product.setCategory(productDetails.getCategory());
 
-        // update category
-        if (productDetails.getCategory() != null && productDetails.getCategory().getId() != null) {
-            product.setCategory(category);
-        }
 
         //update product
         return productRepo.save(product);
     }
-
 
     // Delete a product
     public void deleteProduct(long id) {
@@ -122,6 +117,27 @@ public class ProductService {
         }
     }
 
+    public List<Product> findByFilters(Double minPrice, Double maxPrice, Long categoryId) {
+        if (categoryId != null) {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceBetween(categoryId, minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByCategoryIdAndPriceGreaterThanEqual(categoryId, minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByCategoryIdAndPriceLessThanEqual(categoryId, maxPrice);
+            }
+            return productRepo.findByCategory_Id(categoryId);
+        } else {
+            if (minPrice != null && maxPrice != null) {
+                return productRepo.findByPriceBetween(minPrice, maxPrice);
+            } else if (minPrice != null) {
+                return productRepo.findByPriceGreaterThanEqual(minPrice);
+            } else if (maxPrice != null) {
+                return productRepo.findByPriceLessThanEqual(maxPrice);
+            }
+            return productRepo.findAll();
+        }
+    }
 
     // Find products within price range
     public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
@@ -130,11 +146,13 @@ public class ProductService {
 
     // Find products by category
     public List<Product> findByCategoryId(Long categoryId) {
+
         return productRepo.findByCategory_Id(categoryId);
     }
 
     // Find products by category
     public List<Product> findByCategoryName(String name) {
+
         return productRepo.findByCategory_Name(name);
     }
 

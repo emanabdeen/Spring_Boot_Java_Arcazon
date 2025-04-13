@@ -29,12 +29,9 @@ public class CustomerService {
     }
 
     public List<CustomerDto> findAllByNameOrEmail(String customerFirstName, String customerLastName, String customerEmail) {
-
-        List<CustomerDto> customerDtoList = CustomerUtils.listEntityToListDto(
-                customerRepo.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(customerFirstName, customerLastName, customerEmail)
-        );
-
-        return customerDtoList;
+        return CustomerUtils.listEntityToListDto(
+                customerRepo.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(customerFirstName, customerLastName, customerEmail
+                ));
     }
 
     @Transactional
@@ -54,6 +51,19 @@ public class CustomerService {
     public void deleteCustomer(Long id){
         customerRepo.deleteById(id);
 
+    }
+
+    public Customer findByEmail(String email) {
+        return customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
+    public boolean emailExists(String email) {
+        try {
+            findByEmail(email);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
 }
