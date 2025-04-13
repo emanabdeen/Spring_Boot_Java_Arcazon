@@ -67,7 +67,6 @@ public class ProductService {
         }
     }
 
-
     // Update a product
     public Product updateProduct(Long id, Product productDetails, Category category) {
         Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("Product not found"));
@@ -86,7 +85,6 @@ public class ProductService {
         //update product
         return productRepo.save(product);
     }
-
 
     // Delete a product
     public void deleteProduct(long id) {
@@ -151,11 +149,13 @@ public class ProductService {
 
     // Find products by category
     public List<Product> findByCategoryId(Long categoryId) {
+
         return productRepo.findByCategory_Id(categoryId);
     }
 
     // Find products by category
     public List<Product> findByCategoryName(String name) {
+
         return productRepo.findByCategory_Name(name);
     }
 
