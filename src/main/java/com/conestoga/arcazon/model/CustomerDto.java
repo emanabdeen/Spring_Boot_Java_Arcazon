@@ -1,6 +1,9 @@
 package com.conestoga.arcazon.model;
 
 import jakarta.persistence.Column;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.Instant;
 
 public class CustomerDto {
 
@@ -16,6 +19,11 @@ public class CustomerDto {
     private String city;
     private String province;
     private String postalCode;
+
+    private Instant createdAt;
+
+
+    private Instant updatedAt;
 
     public CustomerDto() {
     }
@@ -90,5 +98,21 @@ public class CustomerDto {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

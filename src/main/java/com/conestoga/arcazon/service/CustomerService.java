@@ -24,12 +24,17 @@ public class CustomerService {
         return customerRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
 
-    public List<Customer> findAll() {
-        return customerRepo.findAll();
+    public List<CustomerDto> findAll() {
+        return CustomerUtils.listEntityToListDto(customerRepo.findAll());
     }
 
-    public List<Customer> findAllByNameOrEmail(String customerFirstName, String customerLastName, String customerEmail) {
-        return customerRepo.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(customerFirstName, customerLastName, customerEmail);
+    public List<CustomerDto> findAllByNameOrEmail(String customerFirstName, String customerLastName, String customerEmail) {
+
+        List<CustomerDto> customerDtoList = CustomerUtils.listEntityToListDto(
+                customerRepo.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(customerFirstName, customerLastName, customerEmail)
+        );
+
+        return customerDtoList;
     }
 
     @Transactional

@@ -27,6 +27,7 @@ public class Customer {
     @Column(name = "last_name", nullable = false, length = 60)
     private String lastName;
 
+
     @Column(name = "email", nullable = false, length = 120)
     private String email;
 
@@ -161,6 +162,7 @@ public class Customer {
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
     @PreUpdate
     protected void onUpdate() {

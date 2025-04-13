@@ -20,6 +20,8 @@ public class CustomerUtils {
         customer.setCity(dto.getCity());
         customer.setProvince(dto.getProvince());
         customer.setPostalCode(dto.getPostalCode());
+        customer.setCreatedAt(dto.getCreatedAt());
+        customer.setUpdatedAt(dto.getUpdatedAt());
 
         return customer;
 
@@ -38,6 +40,8 @@ public class CustomerUtils {
         dto.setCity(customer.getCity());
         dto.setProvince(customer.getProvince());
         dto.setPostalCode(customer.getPostalCode());
+        dto.setCreatedAt(customer.getCreatedAt());
+        dto.setUpdatedAt(customer.getUpdatedAt());
 
         return dto;
     }

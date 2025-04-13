@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Details</title>
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+
+
+<form th:action="@{~/customers}" method="POST">
+
+
+    <div class="container mt-4">
+
+        <div>
+            <input class="form-control"
+                   type="text" id="id" name="id"  hidden/>
+
+        </div>
+
+        <div>
+            <span style="font-weight: bold">First Name</span>
+            <input class="form-control"
+                   type="text" id="firstName" name="firstName"  required/>
+        </div>
+
+        <div>
+            <span style="font-weight: bold">Last Name</span>
+            <input class="form-control"
+                   type="text" id="lastName" name="lastName"  required/>
+        </div>
+
+        <div>
+            <span style="font-weight: bold">Email</span>
+
+            <input class="form-control"
+                   type="text" id="email" name="email"  required/>
+        </div>
+
+        <div>
+            <span style="font-weight: bold">Phone</span>
+            <input class="form-control"
+                   type="text"  id="phone" name="phone" />
+        </div>
+
+
+        <div>
+            <span style="font-weight: bold">Address</span>
+
+            <input class="form-control"
+                   type="text" id="addressLine1" name="addressLine1" />
+        </div>
+
+        <div>
+            <span style="font-weight: bold">City</span>
+
+            <input class="form-control"
+                   type="text"  id="city" name="city" />
+        </div>
+
+        <div>
+            <span style="font-weight: bold">Province</span>
+
+            <input class="form-control"
+                   type="text" id="province" name="province" />
+        </div>
+
+        <div>
+            <span style="font-weight: bold">Portal Code</span>
+            <input class="form-control"
+                   type="text"  id="postalCode" name="postalCode"/>
+        </div>
+
+        <div>
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+
+    </div>
+</form>
+<br>
+
+<div class="container mt-4">
+    <a class="btn btn-secondary" th:href="@{/customers}">Back to List</a>
+    <a class="btn btn-secondary" href="@${/customers/{id} (id=$(customer.id)}">Bak to View</a>
+</div>
+
+</body>
+</html>

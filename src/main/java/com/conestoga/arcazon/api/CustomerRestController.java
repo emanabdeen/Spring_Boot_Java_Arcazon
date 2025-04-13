@@ -1,5 +1,6 @@
 package com.conestoga.arcazon.api;
 
+import com.conestoga.arcazon.Utils.CustomerUtils;
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.CustomerDto;
 import com.conestoga.arcazon.service.CustomerService;
@@ -23,11 +24,11 @@ public class CustomerRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers(){
+    public ResponseEntity<List<CustomerDto>> getAllCustomers(){
 
         try{
 
-            List<Customer> customers = new ArrayList<>();
+            List<CustomerDto> customers = new ArrayList<>();
             customers = customerService.findAll();
 
             return ResponseEntity.ok(customers);
@@ -63,7 +64,7 @@ public class CustomerRestController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<Customer>> getByNameOrEmail(@RequestParam(required = false) String name, @RequestParam(required = false) String email){
+    public ResponseEntity<List<CustomerDto>> getByNameOrEmail(@RequestParam(required = false) String name, @RequestParam(required = false) String email){
 
         try{
             //checks if at least one of the params is provided
@@ -71,7 +72,8 @@ public class CustomerRestController {
                 return ResponseEntity.badRequest().build();
             }
 
-            List<Customer> customerList = customerService.findAllByNameOrEmail(name,name, email);
+            List<CustomerDto> customerList = customerService.findAllByNameOrEmail(name,name, email);
+
             return ResponseEntity.ok(customerList);
 
         }catch (Exception e){
