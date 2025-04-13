@@ -78,12 +78,12 @@ public class CategoryRestController {
     }
 
     // DELETE /categories/{id}
-    @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable Long id) {
-        try {
-            categoryService.deleteCategory(id);
-        } catch (Exception e) {
-            System.out.println("Category not found or another error occurred: " + e.getMessage());
-        }
-    }
+//    @DeleteMapping("/{id}")
+//    public void deleteCategory(@PathVariable Long id) {
+//        try {
+//            categoryService.deleteCategory(id);
+//        } catch (Exception e) {
+//            System.out.println("Category not found or another error occurred: " + e.getMessage());
+//        }
+//    }
 }

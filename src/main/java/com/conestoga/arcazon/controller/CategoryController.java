@@ -57,20 +57,49 @@ public class CategoryController {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             redirectattributes.addFlashAttribute("error", "Error adding category: " + e.getMessage());
-            return "redirect:/categories/add-new";
+            return "redirect:category/add-category-form";
+        }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editCategory(@PathVariable Long id, Model model, RedirectAttributes redirectattributes) {
+        try {
+            System.out.println("Finding category for edit with ID: " + id);
+            Category category = categoryService.findById(id);
+            model.addAttribute("category", category);
+            return "category/edit-category-form";
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            redirectattributes.addAttribute("error", "Error finding category: " + e.getMessage());
+            return "redirect:/categories/categories-list";
         }
     }
 
     // PUT /categories/{id}
-    @PutMapping("/{id}")
-    public String updateCategory(@PathVariable Long id) {
-        return "redirect:category/categories-list";
+    @PostMapping("/edit/{id}")
+    public String updateCategory(@PathVariable Long id, @ModelAttribute Category category, RedirectAttributes redirectattributes) {
+        try {
+            System.out.println("Updating category with ID: " + id);
+            categoryService.updateCategory(id, category);
+            return "redirect:/categories/categories-list";
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+
+            redirectattributes.addFlashAttribute("error", "Error updating category: " + e.getMessage());
+            return "redirect:category/edit-category-form";
+        }
     }
 
     // DELETE /categories/{id}
-//    @DeleteMapping("/{id}")
+//    @GetMapping("/delete/{id}")
 //    public String deleteCategory(@PathVariable Long id) {
-//        return "redirect:/category/categories";
+//        try {
+//            categoryService.deleteCategory(id);
+//            return "redirect:/categories/categories-list";
+//        } catch (Exception e) {
+//            System.out.println("Error: " + e.getMessage());
+//            return "redirect:/categories/categories-list";
+//        }
 //    }
 
 }
