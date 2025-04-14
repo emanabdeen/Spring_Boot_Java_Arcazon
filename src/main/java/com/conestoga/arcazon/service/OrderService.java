@@ -76,8 +76,19 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByCustomerId(long id) {
+
         return orderRepo.findAllByCustomer_Id(id);
     }
+
+    public Order updateOrder(Order order) {
+        return orderRepo.save(order);
+    }
+
+    public void deleteOrder(long id) {
+        Order order = findOrderById(id);
+        orderRepo.delete(order);
+    }
+
 
 
 }

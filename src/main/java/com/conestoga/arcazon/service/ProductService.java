@@ -159,7 +159,6 @@ public class ProductService {
     }
 
 
-
     public  Boolean checkProductStock(List<OrderItemRequest> orderItems) {
         for (OrderItemRequest itemRequest : orderItems) {
             // Update product stock
@@ -172,6 +171,7 @@ public class ProductService {
         }
         return true;
     }
+
     public  Boolean checkProductStockAPI(List<OrderItemApiRequest> orderItems) {
         for (OrderItemApiRequest itemRequest : orderItems) {
             // Update product stock

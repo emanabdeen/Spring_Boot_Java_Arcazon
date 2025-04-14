@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class OrderResController {
         this.categoryService = categoryService;
     }
 
-    // GET /orders/all
+    // GET api/orders/all
     @GetMapping("/all")
     public ResponseEntity<?> getAllOrders() {
         try {
@@ -59,7 +60,7 @@ public class OrderResController {
         }
     }
 
-    // GET /orders/{id}
+    // GET api/orders/{id}
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable Long id) {
         try {
@@ -78,7 +79,7 @@ public class OrderResController {
         }
     }
 
-    // GET /orders/customer/{id}
+    // GET api/orders/customer/{id}
     @GetMapping("/customer/{id}")
     public ResponseEntity<?> getAllOrdersByCustomerId(@PathVariable Long id) {
         try {
@@ -104,7 +105,7 @@ public class OrderResController {
         }
     }
 
-    // POST /Orders
+    // POST api/Orders
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
 
@@ -168,6 +169,76 @@ public class OrderResController {
                     .body(Map.of(
                             "error", "Failed to create order",
                             "details", e.getMessage()
+                    ));
+        }
+    }
+
+
+    //PUT api/orders/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateOrder(@PathVariable Long id,@RequestBody OrderRequest request) {
+        try {
+            // Validate input
+            if (request == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Order data cannot be null"));
+            }
+
+            // Get existing product
+            Order existingOrder = orderService.findOrderById(id);
+            if (existingOrder == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Update fields
+            existingOrder.setCustomer(customerService.findCustomerById(request.getCustomer_id()));
+            existingOrder.setTotalAmount(request.getTotalAmount());
+            existingOrder.setUpdatedAt(Instant.now());
+
+            // Save updates
+            Order updatedOrder = orderService.updateOrder(existingOrder);
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "success", true,
+                            "message", "Order updated successfully",
+                            "Order", updatedOrder
+                    ));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of(
+                            "error", "Failed to update order",
+                            "details", e.getMessage()
+                    ));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        try {
+            // Check if product exists
+            Order order = orderService.findOrderById(id);
+            if (order == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Delete the product
+            orderService.deleteOrder(id);
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "success", true,
+                            "message", "Order deleted successfully",
+                            "deletedId", id
+                    ));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of(
+                            "error", "Failed to delete order",
+                            "details", e.getMessage(),
+                            "productId", id
                     ));
         }
     }
