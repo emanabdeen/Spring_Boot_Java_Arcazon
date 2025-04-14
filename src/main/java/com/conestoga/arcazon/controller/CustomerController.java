@@ -33,31 +33,6 @@ public class CustomerController {
         return "customers/login";
     }
 
-    /*@PostMapping("/login")
-    public String processLogin(String email,
-                               HttpSession session,
-                               Model model,
-                               @ModelAttribute("redirectTo") String redirectTo) {
-        try {
-            Customer customer = customerService.findByEmail(email);
-            session.setAttribute("customer", customer);
-
-            // Check if there's a pending order
-            List<ProductQuantityDTO> pendingOrder =
-                    (List<ProductQuantityDTO>) session.getAttribute("pendingOrderItems");
-
-            if (pendingOrder != null && !pendingOrder.isEmpty()) {
-                session.removeAttribute("pendingOrderItems"); // Clear the stored order
-                return "redirect:/orders/order-items"; // Redirect back to order review
-            }
-
-            return "redirect:/"; // Default redirect to the root "dashboard"
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "dashboard";
-        }
-    }*/
-
 
     @PostMapping("/login")
     public String processLogin(String email, HttpSession session, Model model) {
