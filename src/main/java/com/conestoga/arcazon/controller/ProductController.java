@@ -67,10 +67,11 @@ public class ProductController {
         if (customer == null) {
             return "redirect:/customers/login";
         }*/
+        //model.addAttribute("customer", customer); // Add customer to model
 
         Product product = productService.findById(id);
         model.addAttribute("product", product);
-        //model.addAttribute("customer", customer); // Add customer to model
+
         return "products/product-details"; // Updated template path
     }
 

@@ -36,10 +36,10 @@ public class CustomerController {
             Customer customer = customerService.findByEmail(email,null);
 
             session.setAttribute("customer", customer);
-            return "redirect:/products/products-list"; // This should match your ProductController mapping
+            return "redirect:/"; // This should match your ProductController mapping
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "dashboard";
+            return "redirect:/";
         }
     }
 
@@ -156,7 +156,7 @@ public class CustomerController {
 
     }
 
-    @GetMapping("/add")
+    @GetMapping("/customer-add")
     public String addCustomer(){
         return "customers/customer-add.html";
     }
