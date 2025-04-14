@@ -46,7 +46,7 @@ public class CustomerRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error","Failed to retireve customers"));
+                    Collections.singletonMap("error","Failed to retrieve customers"));
         }
     }
 

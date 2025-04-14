@@ -29,7 +29,7 @@ public class CategoryRestController {
         try {
             categories = categoryService.findAll();
             if (categories.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
                         .body(Collections.singletonMap("message", "No categories found"));
             }
             return ResponseEntity.ok(categories);
@@ -37,8 +37,7 @@ public class CategoryRestController {
             e.printStackTrace();
             return ResponseEntity.internalServerError()
                     .body(Map.of(
-                            "error", "Failed to retrieve categories",
-                            "details", e.getMessage()
+                            "error", "Failed to retrieve categories"
                     ));
         }
     }
@@ -56,14 +55,12 @@ public class CategoryRestController {
             }
         } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Category not found with id: " + id));
+            return ResponseEntity.noContent().build();
         } catch (Exception er) {
             System.out.println(er.getMessage());
             return ResponseEntity.internalServerError()
                     .body(Map.of(
-                            "error", "Failed to retrieve category",
-                            "details", er.getMessage()
+                            "error", "Failed to retrieve category"
                     ));
         }
     }
@@ -73,7 +70,7 @@ public class CategoryRestController {
     public ResponseEntity<Object> createCategory(@RequestBody CategoryDTO categoryDTO) {
         if (categoryDTO == null) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Request body cannot be null"));
+                    .body(Map.of("error", "Invalid category object"));
         } else {
             try {
                 categoryDTO.setCreatedAt(categoryDTO.getCreatedAt() == null ? Instant.now() : categoryDTO.getCreatedAt());
@@ -85,8 +82,7 @@ public class CategoryRestController {
                 System.out.println("Error occurred while creating category: " + e.getMessage());
                 return ResponseEntity.internalServerError()
                         .body(Map.of(
-                                "error", "Failed to create category",
-                                "details", e.getMessage()
+                                "error", "Failed to create category"
                         ));
             }
         }
@@ -106,7 +102,7 @@ public class CategoryRestController {
         } catch (Exception e) {
             System.out.println("Category not found or another error occurred: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(Map.of("error", "Failed to update category: "));
         }
     }
 
