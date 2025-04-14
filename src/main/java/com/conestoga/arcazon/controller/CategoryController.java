@@ -1,7 +1,9 @@
 package com.conestoga.arcazon.controller;
 
 import com.conestoga.arcazon.model.Category;
+import com.conestoga.arcazon.model.CategoryDTO;
 import com.conestoga.arcazon.service.CategoryService;
+import com.conestoga.arcazon.utils.CategoryUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class CategoryController {
     // GET /categories - get all categories
     @GetMapping(value = "/categories-list")
     public String getAllCategories(Model model) {
-        List<Category> categoryList = categoryService.findAll();
+        List<CategoryDTO> categoryList = categoryService.findAll();
         model.addAttribute("categories", categoryList);
         return "category/categories-list";
     }
@@ -51,7 +53,8 @@ public class CategoryController {
     @PostMapping(value = "/add-new")
     public String createCategory(@ModelAttribute Category category, RedirectAttributes redirectattributes) {
         try {
-            Category savedCategory = categoryService.addNewCategory(category);
+            CategoryDTO dto = CategoryUtils.entityToDto(category);
+            categoryService.addNewCategory(dto);
             redirectattributes.addFlashAttribute("success", "Category added successfully!");
             return "redirect:/categories/categories-list";
         } catch (Exception e) {
@@ -80,11 +83,11 @@ public class CategoryController {
     public String updateCategory(@PathVariable Long id, @ModelAttribute Category category, RedirectAttributes redirectattributes) {
         try {
             System.out.println("Updating category with ID: " + id);
-            categoryService.updateCategory(id, category);
+            CategoryDTO dto = CategoryUtils.entityToDto(category);
+            categoryService.updateCategory(id, dto);
             return "redirect:/categories/categories-list";
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-
             redirectattributes.addFlashAttribute("error", "Error updating category: " + e.getMessage());
             return "redirect:category/edit-category-form";
         }

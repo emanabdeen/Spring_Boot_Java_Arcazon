@@ -2,12 +2,18 @@ package com.conestoga.arcazon.model;
 
 import java.time.Instant;
 
-public class CategoryCreateRequest {
+public class CategoryDTO {
     private Long id;
     private String name;
     private String description;
 
-    public CategoryCreateRequest(Long id, String name, String description) {
+    private Instant createdAt;
+    private Instant updatedAt;
+
+    public CategoryDTO() {
+    }
+
+    public CategoryDTO(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -37,14 +43,20 @@ public class CategoryCreateRequest {
         this.description = description;
     }
 
-    public Category toCategory() {
-        Category category = new Category();
-        category.setId(id);
-        category.setName(name);
-        category.setDescription(description);
-        category.setCreatedAt(Instant.now());
-        category.setUpdatedAt(Instant.now());
-        return category;
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }
