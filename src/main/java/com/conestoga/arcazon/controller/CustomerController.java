@@ -109,10 +109,10 @@ public class CustomerController {
            return "redirect:/customers";
        }catch (InvalidObjectException e){
            redirectAttributes.addFlashAttribute("error", e.getMessage() );
-           return "redirect:/customers/add";
+           return "redirect:/customers/customer-add";
        }catch (Exception e){
            redirectAttributes.addFlashAttribute("error", "Failed to add customer " );
-           return "redirect:/customers/add";
+           return "redirect:/customers/customer-add";
        }
 
     }
