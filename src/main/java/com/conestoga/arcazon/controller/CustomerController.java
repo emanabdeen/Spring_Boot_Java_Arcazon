@@ -39,7 +39,7 @@ public class CustomerController {
             return "redirect:/"; // This should match your ProductController mapping
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "redirect:/";
+            return "/customers/login";
         }
     }
 
