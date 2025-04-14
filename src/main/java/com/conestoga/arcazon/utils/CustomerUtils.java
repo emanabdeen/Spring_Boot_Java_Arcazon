@@ -69,5 +69,21 @@ public class CustomerUtils {
     }
 
 
+    public static boolean validateCustomer(CustomerDto dto){
+        if(dto == null){
+            return false;
+        }else
+            if((dto.getFirstName() == null || dto.getFirstName().isEmpty() ||
+                    (dto.getLastName() == null || dto.getLastName().isEmpty()) ||
+                    (dto.getEmail() == null || dto.getEmail().isEmpty()) ||
+                    (dto.getLastName() == null || dto.getLastName().isEmpty()))){
+
+                return false;
+        }else{
+                return true;
+            }
+    }
+
+
 
 }

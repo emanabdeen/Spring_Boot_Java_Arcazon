@@ -3,11 +3,13 @@ package com.conestoga.arcazon.api;
 import com.conestoga.arcazon.model.Customer;
 import com.conestoga.arcazon.model.CustomerDto;
 import com.conestoga.arcazon.service.CustomerService;
+import com.conestoga.arcazon.utils.CustomerUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.InvalidObjectException;
+import java.net.URI;
 import java.util.*;
 
 @RestController
@@ -22,18 +24,29 @@ public class CustomerRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllCustomers() {
+    public ResponseEntity<Object> getAllCustomers(@RequestParam(required = false) String name, @RequestParam(required = false) String email) {
 
         try {
 
             List<CustomerDto> customers = new ArrayList<>();
-            customers = customerService.findAll();
+
+            //sanitize optional filters if both null or empty, ignore
+            name = (name != null && name.isEmpty()) ? null : name;
+            email = (email != null && email.isEmpty()) ? null : email;
+
+            if ((name != null) || (email != null)) {
+
+                customers = customerService.findAllByNameOrEmail(name, email);
+
+            }else{
+                customers = customerService.findAll();
+            }
 
             return ResponseEntity.ok(customers);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
+                    Collections.singletonMap("error","Failed to retireve customers"));
         }
     }
 
@@ -57,38 +70,29 @@ public class CustomerRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
+                    Collections.singletonMap("error","Failed to retrieve customer"));
         }
     }
 
 
-    @GetMapping("/search")
-    public ResponseEntity<Object> getByNameOrEmail(@RequestParam(required = false) String name, @RequestParam(required = false) String email) {
-
-        try {
-            //checks if at least one of the params is provided
-            if ((name == null || name.isEmpty()) && (email == null || email.isEmpty())) {
-                return ResponseEntity.badRequest().build();
-            }
-
-            List<CustomerDto> customerList = customerService.findAllByNameOrEmail(name, email);
-
-            return ResponseEntity.ok(customerList);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
-        }
-    }
 
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addCustomer(@RequestBody CustomerDto customerDto) {
 
         try {
-            customerService.addCustomer(customerDto);
-            return ResponseEntity.noContent().build();
+
+            if(CustomerUtils.validateCustomer(customerDto)){
+                CustomerDto newCustomer = customerService.addCustomer(customerDto);
+
+                URI location = URI.create("/customers/"+newCustomer.getId());
+                return ResponseEntity.created(location).body(newCustomer);
+            }else{
+
+                return ResponseEntity.badRequest().body(
+                        Collections.singletonMap("error","Invalid customer object"));
+            }
+
         } catch (InvalidObjectException e) {
             e.printStackTrace();
             return ResponseEntity.unprocessableEntity().body(
@@ -96,15 +100,27 @@ public class CustomerRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
+                    Collections.singletonMap("error","Failed to add customer"));
         }
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDto customerDto) {
         try {
-            customerService.updateCustomer(customerDto);
-            return ResponseEntity.noContent().build();
+            if(CustomerUtils.validateCustomer(customerDto)){
+
+
+                customerService.updateCustomer(customerDto);
+
+                CustomerDto savedCustomer = CustomerUtils.entityToDto(customerService.findCustomerById(customerDto.getId()));
+
+                return ResponseEntity.ok().body(savedCustomer);
+            }else{
+
+                return ResponseEntity.badRequest().body(
+                        Collections.singletonMap("error","Invalid customer object"));
+            }
+
         } catch (InvalidObjectException e) {
             e.printStackTrace();
             return ResponseEntity.unprocessableEntity().body(
@@ -112,7 +128,7 @@ public class CustomerRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
+                    Collections.singletonMap("error","Failed to update customer"));
         }
     }
 
@@ -130,7 +146,7 @@ public class CustomerRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(
-                    Collections.singletonMap("error",e.getMessage()));
+                    Collections.singletonMap("error","Failed to delete customer"));
         }
     }
 
