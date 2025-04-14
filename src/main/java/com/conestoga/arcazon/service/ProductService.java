@@ -1,5 +1,6 @@
 package com.conestoga.arcazon.service;
 
+import com.conestoga.arcazon.model.OrderItemApiRequest;
 import com.conestoga.arcazon.model.OrderItemRequest;
 import com.conestoga.arcazon.model.Product;
 import com.conestoga.arcazon.repository.ProductRepository;
@@ -90,6 +91,23 @@ public class ProductService {
         productRepo.delete(product);
     }
 
+    // Find products within price range
+    public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
+        return productRepo.findByPriceBetween(minPrice, maxPrice);
+    }
+
+    // Find products by category
+    public List<Product> findByCategoryId(Long categoryId) {
+
+        return productRepo.findByCategory_Id(categoryId);
+    }
+
+    // Find products by category
+    public List<Product> findByCategoryName(String name) {
+
+        return productRepo.findByCategory_Name(name);
+    }
+
     /**
      * This method to update the stock of a product. the stock have to be equal or greater than 0. if not it will throw error
      */
@@ -118,19 +136,6 @@ public class ProductService {
         }
     }
 
-    public  Boolean checkProductStock(List<OrderItemRequest> orderItems) {
-        for (OrderItemRequest itemRequest : orderItems) {
-            // Update product stock
-            int newStock = itemRequest.getProduct().getStock() - itemRequest.getQuantity();
-
-            // update category
-            if (newStock < 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public List<Product> findByFilters(Double minPrice, Double maxPrice, Long categoryId) {
         if (categoryId != null) {
             if (minPrice != null && maxPrice != null) {
@@ -153,21 +158,32 @@ public class ProductService {
         }
     }
 
-    // Find products within price range
-    public List<Product> findByPriceBetween(Double minPrice, Double maxPrice) {
-        return productRepo.findByPriceBetween(minPrice, maxPrice);
+
+
+    public  Boolean checkProductStock(List<OrderItemRequest> orderItems) {
+        for (OrderItemRequest itemRequest : orderItems) {
+            // Update product stock
+            int newStock = itemRequest.getProduct().getStock() - itemRequest.getQuantity();
+
+            // update category
+            if (newStock < 0) {
+                return false;
+            }
+        }
+        return true;
     }
+    public  Boolean checkProductStockAPI(List<OrderItemApiRequest> orderItems) {
+        for (OrderItemApiRequest itemRequest : orderItems) {
+            // Update product stock
+            Product product = findById(itemRequest.getProductId());
+            int newStock = product.getStock() - itemRequest.getQuantity();
 
-    // Find products by category
-    public List<Product> findByCategoryId(Long categoryId) {
-
-        return productRepo.findByCategory_Id(categoryId);
-    }
-
-    // Find products by category
-    public List<Product> findByCategoryName(String name) {
-
-        return productRepo.findByCategory_Name(name);
+            // update category
+            if (newStock < 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

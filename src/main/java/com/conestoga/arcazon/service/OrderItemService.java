@@ -23,7 +23,6 @@ public class OrderItemService {
         // Process order items
         for (OrderItemRequest itemRequest : orderItems) {
             // Get product and verify stock
-            //Product product = productService.findById(itemRequest.getProductId());
 
             if (itemRequest.getProduct().getStock() < itemRequest.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for product: " + itemRequest.getProduct().getName());

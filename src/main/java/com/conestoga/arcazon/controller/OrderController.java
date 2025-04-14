@@ -151,18 +151,24 @@ public class OrderController {
             // Get customer from session or request
             Customer customer = customerService.findCustomerById(customerId);
 
-            //check the product stock
+            // 1. check the order items not empty
+            if (orderItems == null || orderItems.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error","add quantity to at least one product");
+                return "redirect:/orders/products-list";
+            }
+
+            // 2. check the product stock
             if (!productService.checkProductStock(orderItems)) {
                 redirectAttributes.addFlashAttribute("error","one or more products have not enough stock");
                 return "redirect:/orders/products-list";
             }
-            // Create order
-            Order order = orderService.createOrder(customer, orderItems, totalPrice);
+            // 3. Create order
+            Order order = orderService.createOrder(customer, totalPrice);
 
-            // Save order items
+            // 4. Save order items
             orderItemService.saveOrderItemList(orderItems, order);
 
-            // Update product stocks
+            // 5. Update product stocks
             productService.updateProductsStock(orderItems);
 
             return "redirect:/orders/order/" + order.getId(); // Redirect to order confirmation page
