@@ -36,7 +36,7 @@ public class CustomerController {
             Customer customer = customerService.findByEmail(email,null);
 
             session.setAttribute("customer", customer);
-            return "/orders/products-list";
+            return "redirect:/orders/products-list";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", "e.getMessage()");
             model.addAttribute("error", e.getMessage());
