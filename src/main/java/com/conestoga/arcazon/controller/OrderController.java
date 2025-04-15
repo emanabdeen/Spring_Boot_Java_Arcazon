@@ -184,4 +184,60 @@ public class OrderController {
         return "orders/order";
     }
 
+    @GetMapping("/orders-list")
+    public String getOrders(Model model, Long customerId) {
+
+        List<Order> orders;
+        if (customerId != null) {
+            // Filter orders by customer
+            orders = orderService.findOrdersByCustomerId(customerId);
+        } else {
+            // Get all orders
+            orders = orderService.findAll();
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("customers", customerService.findAll()); // For customers dropdown
+
+        return "orders/orders-list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return "redirect:/orders/orders-list";
+    }
+
+    @GetMapping("/{id}")
+    public String getOrderById(@PathVariable Long id, Model model, HttpSession session) {
+
+        Order order = orderService.findOrderById(id);
+        model.addAttribute("order", order);
+
+        return "orders/order-details";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditOrderForm(@PathVariable Long id, Model model) {
+        model.addAttribute("order", orderService.findOrderById(id));
+        return "orders/edit-order-form";
+    }
+
+
+    @PostMapping("/update/{id}")
+    public String updateOrder(@PathVariable Long id,@ModelAttribute Order order,RedirectAttributes redirectAttributes) {
+        try {
+
+            Order updatedorder = orderService.findOrderById(id);
+            updatedorder.setTotalAmount(order.getTotalAmount());
+            orderService.updateOrder(updatedorder);
+            redirectAttributes.addFlashAttribute("success","Order updated successfully!");
+            return "redirect:/orders/orders-list";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Error updating order: " + e.getMessage());
+            return "redirect:/orders/edit/" + id;
+        }
+    }
+
 }

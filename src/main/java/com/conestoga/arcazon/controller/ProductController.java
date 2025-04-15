@@ -62,12 +62,6 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String getProductById(@PathVariable Long id, Model model, HttpSession session) {
-        /*// Check if user is logged in
-        Customer customer = (Customer) session.getAttribute("customer");
-        if (customer == null) {
-            return "redirect:/customers/login";
-        }*/
-        //model.addAttribute("customer", customer); // Add customer to model
 
         Product product = productService.findById(id);
         model.addAttribute("product", product);

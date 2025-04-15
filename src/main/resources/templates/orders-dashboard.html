@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div>
+        <a th:href="@{/}" class="home-button">
+            <i class="bi bi-house-door me-2"></i>HOME
+        </a>
+    </div>
+    <div class="text-center mb-5">
+        <h1>Orders Management</h1>
+    </div>
+
+    <div class="row g-3 justify-content-center">
+        <!-- Orders Management As Admin-->
+        <div class="col-md-6 col-lg-5">
+            <a href="/orders/orders-list" class="text-decoration-none">
+                <div class="card dashboard-card text-center p-4 bg-white rounded-3">
+                    <div class="card-body">
+                        <h3>Orders Management As Admin</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Create Orders As Customer -->
+        <div class="col-md-6 col-lg-5">
+            <a href="/orders/products-list" class="text-decoration-none">
+                <div class="card dashboard-card text-center p-4 bg-white rounded-3">
+                    <div class="card-body">
+                        <h3>Create Orders As Customer</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
