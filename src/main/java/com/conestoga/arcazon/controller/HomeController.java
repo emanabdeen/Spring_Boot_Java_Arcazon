@@ -10,4 +10,9 @@ public class HomeController {
     public String showDashboard() {
         return "dashboard";
     }
+    @GetMapping("/orders-dashboard")
+    public String showOrdersDashboard() {
+        return "orders-dashboard";
+    }
+
 }

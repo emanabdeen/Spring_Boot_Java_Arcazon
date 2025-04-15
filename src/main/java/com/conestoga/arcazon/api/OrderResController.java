@@ -193,7 +193,6 @@ public class OrderResController {
             // Update fields
             existingOrder.setCustomer(customerService.findCustomerById(request.getCustomer_id()));
             existingOrder.setTotalAmount(request.getTotalAmount());
-            existingOrder.setUpdatedAt(Instant.now());
 
             // Save updates
             Order updatedOrder = orderService.updateOrder(existingOrder);

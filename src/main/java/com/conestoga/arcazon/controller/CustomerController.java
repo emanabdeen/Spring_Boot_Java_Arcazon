@@ -31,15 +31,16 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public String processLogin(String email, HttpSession session, Model model) {
+    public String processLogin(String email, HttpSession session, Model model ,RedirectAttributes redirectAttributes) {
         try {
             Customer customer = customerService.findByEmail(email,null);
 
             session.setAttribute("customer", customer);
-            return "redirect:/"; // This should match your ProductController mapping
+            return "/orders/products-list";
         } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", "e.getMessage()");
             model.addAttribute("error", e.getMessage());
-            return "/customers/login";
+            return "customers/login";
         }
     }
 

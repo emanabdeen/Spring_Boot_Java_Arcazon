@@ -81,6 +81,7 @@ public class OrderService {
     }
 
     public Order updateOrder(Order order) {
+                order.setUpdatedAt(Instant.now());
         return orderRepo.save(order);
     }
 
@@ -88,7 +89,5 @@ public class OrderService {
         Order order = findOrderById(id);
         orderRepo.delete(order);
     }
-
-
 
 }
