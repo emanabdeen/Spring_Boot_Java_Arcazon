@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -54,6 +55,8 @@ public class CategoryController {
     public String createCategory(@ModelAttribute Category category, RedirectAttributes redirectattributes) {
         try {
             CategoryDTO dto = CategoryUtils.entityToDto(category);
+            dto.setCreatedAt(Instant.now());
+            dto.setUpdatedAt(Instant.now());
             categoryService.addNewCategory(dto);
             redirectattributes.addFlashAttribute("success", "Category added successfully!");
             return "redirect:/categories/categories-list";
@@ -84,6 +87,7 @@ public class CategoryController {
         try {
             System.out.println("Updating category with ID: " + id);
             CategoryDTO dto = CategoryUtils.entityToDto(category);
+            dto.setUpdatedAt(Instant.now());
             categoryService.updateCategory(id, dto);
             return "redirect:/categories/categories-list";
         } catch (Exception e) {
